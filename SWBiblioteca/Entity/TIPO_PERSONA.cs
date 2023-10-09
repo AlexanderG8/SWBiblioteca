@@ -6,7 +6,7 @@ namespace SWBiblioteca.Entity
     {
         [Key]
         public int IdTipoPersona { get; set; }
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
         public bool Estado { get; set; }
         public DateTime FechaCreacion { get; set; }
     }

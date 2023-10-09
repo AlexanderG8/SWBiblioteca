@@ -16,9 +16,14 @@ namespace SWBiblioteca.Data
             base.OnModelCreating(model);
             //builder.Entity<entidad>().ToTable("nombretabla", "esquema");
             model.Entity<TIPO_PERSONA>().HasIndex(z => z.IdTipoPersona).IsUnique();
+            model.Entity<CATEGORIA>().HasIndex(z => z.IdCategoria).IsUnique();
+            model.Entity<ESTADOS>().HasIndex(z => z.Id_Estado).IsUnique();
+            
         }
 
         public DbSet<TIPO_PERSONA> TIPO_PERSONA { get; set; }
+        public DbSet<CATEGORIA> CATEGORIA { get; set; }
+        public DbSet<ESTADOS> ESTADOS { get; set; }
 
     }
 }
