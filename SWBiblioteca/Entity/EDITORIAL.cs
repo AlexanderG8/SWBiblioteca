@@ -2,10 +2,10 @@
 
 namespace SWBiblioteca.Entity
 {
-    public class CATEGORIA
+    public class EDITORIAL
     {
         [Key]
-        public int IdCategoria { get; set; }
+        public int IdEditorial { get; set; }
         public string? Descripcion { get; set; }
         public bool Estado { get; set; }
         public DateTime FechaCreacion { get; set; }

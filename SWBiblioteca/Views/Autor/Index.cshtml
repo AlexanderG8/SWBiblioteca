@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CATEGORIA>
+﻿@model IEnumerable<AUTOR>
 @{
 
 }
@@ -6,7 +6,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3 bg-primary">
-        <h6 class="m-0 font-weight-bold text-white">Lista de Categorias</h6>
+        <h6 class="m-0 font-weight-bold text-white">Lista de Autores</h6>
     </div>
     <div class="card-body">
         <div class="row">
@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var item in Model)
+                            @foreach (var item in Model)
                             {
                                 <tr>
                                     <td>
@@ -37,17 +37,18 @@
                                         @if (item.Estado)
                                         {
                                             <span class="badge badge-success p-2">Activo</span>
-                                        }else
+                                        }
+                                        else
                                         {
                                             <span class="badge badge-danger p-2">Inactivo</span>
                                         }
                                     </td>
                                     <td>
-                                        <a asp-action="Modal" asp-route-id="@item.IdCategoria" class="btn btn-primary btn-sm guardar-dialog-window"><i class="fas fa-pen"></i></a>
-                                        <a data-id="@item.IdCategoria.ToString()" class="btn btn-danger btn-sm ml-2 eliminar-dialog-window"><i class="fas fa-trash"></i></a>
+                                        <a asp-action="Modal" asp-route-id="@item.IdAutor" class="btn btn-primary btn-sm guardar-dialog-window"><i class="fas fa-pen"></i></a>
+                                        <a data-id="@item.IdAutor.ToString()" class="btn btn-danger btn-sm ml-2 eliminar-dialog-window"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
-                            }        
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -62,7 +63,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Categoria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Autor</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -100,7 +101,7 @@
         var tabladata;
         $(document).ready(function () {
             tabladata = $('#tabla').DataTable({
-                responsive:true,
+                responsive: true,
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
                 }
@@ -132,26 +133,26 @@
         function Guardar() {
             $('.errorForm').remove();
             let descripción = $("#txtdescripcion").val();
-            if(descripción.trim() == ""){
+            if (descripción.trim() == "") {
                 $("#txtdescripcion").after('<span class="errorForm text-danger">Favor de ingresar la descripción</span>');
                 return false;
             }
 
             var objCategoria = new Object();
-            objCategoria.IdCategoria = $("#txtid").val();
+            objCategoria.IdAutor = $("#txtid").val();
             objCategoria.Descripcion = $("#txtdescripcion").val();
             objCategoria.Estado = $("#cboEstado").val();
             debugger
             jQuery.ajax({
                 type: "POST",
-                url: '@Url.Action("Guardar", "Categoria")',
+                url: '@Url.Action("Guardar", "Autor")',
                 dataType: "json",
                 data: objCategoria,
                 success: function (data) {
                     if (data) {
                         $('#FormModal').modal('hide');
                         swal({
-                            title: "Tu categoría se guardo con exito!",
+                            title: "Tu autor se guardo con exito!",
                             icon: "success",
                             button: "Aceptar",
                         }).then((value) => {
@@ -173,19 +174,19 @@
             });
         }
 
-        function Eliminar(idCategoria) {
+        function Eliminar(idAutor) {
             debugger
             jQuery.ajax({
                 type: "POST",
-                url: '@Url.Action("Eliminar", "Categoria")',
+                url: '@Url.Action("Eliminar", "Autor")',
                 dataType: "json",
-                data: { id : idCategoria },
+                data: { id: idAutor },
                 success: function (data) {
                     debugger
                     if (data) {
                         $('#Delete').modal('hide');
                         swal({
-                            title: "La categoria seleccionada se eliminó con exito!",
+                            title: "El autor seleccionado se eliminó con exito!",
                             icon: "success",
                             button: "Aceptar",
                         }).then((value) => {
@@ -193,7 +194,7 @@
                         });
                     } else {
                         swal({
-                            title: "No se pudo eliminar la categoria seleccionada!",
+                            title: "No se pudo eliminar el autor seleccionado!",
                             icon: "error",
                             button: "Aceptar",
                         });

@@ -1,0 +1,24 @@
+﻿@model AUTOR
+<form id="formNivel">
+    <input type="hidden" asp-for="IdAutor" id="txtid" />
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="txtdescripcion">Descripcion:</label>
+                <input asp-for="Descripcion" type="text" class="form-control required" id="txtdescripcion">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="cboEstado">Estado:</label>
+                <select asp-for="Estado" asp-items="ViewBag.Lista_Estados" id="cboEstado" class="form-control"></select>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+    <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+</div>

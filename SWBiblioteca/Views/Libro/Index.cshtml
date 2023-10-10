@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CATEGORIA>
+﻿@model IEnumerable<LISTAR_LIBROS_Q01>
 @{
 
 }
@@ -6,7 +6,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3 bg-primary">
-        <h6 class="m-0 font-weight-bold text-white">Lista de Categorias</h6>
+        <h6 class="m-0 font-weight-bold text-white">Lista de Libros</h6>
     </div>
     <div class="card-body">
         <div class="row">
@@ -21,33 +21,54 @@
                     <table class="table table-bordered" id="tabla" style="width:100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Descricion</th>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Categoría</th>
+                                <th>Editorial</th>
+                                <th>Ubicación</th>
+                                <th>Ejemplares</th>
                                 <th>Estado</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var item in Model)
+                            @foreach (var item in Model)
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Descripcion)
+                                        @Html.DisplayFor(modelItem => item.Titulo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Autor)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Categoria)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Editorial)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ubicacion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ejemplares)
                                     </td>
                                     <td>
                                         @if (item.Estado)
                                         {
                                             <span class="badge badge-success p-2">Activo</span>
-                                        }else
+                                        }
+                                        else
                                         {
                                             <span class="badge badge-danger p-2">Inactivo</span>
                                         }
                                     </td>
                                     <td>
-                                        <a asp-action="Modal" asp-route-id="@item.IdCategoria" class="btn btn-primary btn-sm guardar-dialog-window"><i class="fas fa-pen"></i></a>
-                                        <a data-id="@item.IdCategoria.ToString()" class="btn btn-danger btn-sm ml-2 eliminar-dialog-window"><i class="fas fa-trash"></i></a>
+                                        <a asp-action="Modal" asp-route-id="@item.IdLibro" class="btn btn-primary btn-sm guardar-dialog-window"><i class="fas fa-pen"></i></a>
+                                        <a data-id="@item.IdLibro.ToString()" class="btn btn-danger btn-sm ml-2 eliminar-dialog-window"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
-                            }        
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -59,10 +80,10 @@
 
 <!-- Modal -->
 <div class="modal fade" id="FormModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Categoria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Libro</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -100,7 +121,7 @@
         var tabladata;
         $(document).ready(function () {
             tabladata = $('#tabla').DataTable({
-                responsive:true,
+                responsive: true,
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
                 }
@@ -130,28 +151,35 @@
 
 
         function Guardar() {
-            $('.errorForm').remove();
-            let descripción = $("#txtdescripcion").val();
-            if(descripción.trim() == ""){
-                $("#txtdescripcion").after('<span class="errorForm text-danger">Favor de ingresar la descripción</span>');
-                return false;
-            }
 
             var objCategoria = new Object();
-            objCategoria.IdCategoria = $("#txtid").val();
-            objCategoria.Descripcion = $("#txtdescripcion").val();
+            objCategoria.IdLibro = $("#txtid").val();
+            objCategoria.Titulo = $("#txttitulo").val();
+            objCategoria.IdAutor = $("#cboautor").val();
+            objCategoria.IdCategoria = $("#cbocategoria").val();
+            objCategoria.IdEditorial = $("#cboeditorial").val();
+            objCategoria.Ubicacion = $("#txtubicacion").val();
+            objCategoria.Ejemplares = $("#txtejemplares").val();
             objCategoria.Estado = $("#cboEstado").val();
+
+            var ImagenSeleccionada = ($("#filelibro"))[0].files[0];
+
+            var data = new FormData();
+            data.append('objeto', JSON.stringify(objCategoria));
+            data.append('imagen', ImagenSeleccionada);
             debugger
             jQuery.ajax({
                 type: "POST",
-                url: '@Url.Action("Guardar", "Categoria")',
+                url: '@Url.Action("Guardar", "Libro")',
                 dataType: "json",
-                data: objCategoria,
+                data: data,
+                processData: false,
+                contentType: false,
                 success: function (data) {
                     if (data) {
                         $('#FormModal').modal('hide');
                         swal({
-                            title: "Tu categoría se guardo con exito!",
+                            title: "Tu libro se guardo con exito!",
                             icon: "success",
                             button: "Aceptar",
                         }).then((value) => {
@@ -173,19 +201,17 @@
             });
         }
 
-        function Eliminar(idCategoria) {
-            debugger
+        function Eliminar(idLibro) {
             jQuery.ajax({
                 type: "POST",
-                url: '@Url.Action("Eliminar", "Categoria")',
+                url: '@Url.Action("Eliminar", "Libro")',
                 dataType: "json",
-                data: { id : idCategoria },
+                data: { id: idLibro },
                 success: function (data) {
-                    debugger
                     if (data) {
                         $('#Delete').modal('hide');
                         swal({
-                            title: "La categoria seleccionada se eliminó con exito!",
+                            title: "El libro seleccionado se eliminó con exito!",
                             icon: "success",
                             button: "Aceptar",
                         }).then((value) => {
@@ -193,7 +219,7 @@
                         });
                     } else {
                         swal({
-                            title: "No se pudo eliminar la categoria seleccionada!",
+                            title: "No se pudo eliminar el libro seleccionado!",
                             icon: "error",
                             button: "Aceptar",
                         });
@@ -205,6 +231,31 @@
                 beforeSend: function () {
                 },
             });
+        }
+
+        function readURL6(input) {
+            const archivo = input.files[0];
+            if (archivo) {
+                const tipo = archivo.type;
+                if (!tipo.startsWith('image/')) {
+                    swal("¡Oops!", "Por favor, seleccione un archivo de imagen", "warning")
+                    input.value = '';
+                }
+                else {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            $('#imglibro')
+                                .attr('src', e.target.result)
+                                .width(190)
+                                .height(192);
+                        };
+
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+            }
         }
 
     </script>

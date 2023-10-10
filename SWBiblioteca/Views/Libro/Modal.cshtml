@@ -1,0 +1,64 @@
+﻿@model LIBRO
+
+<form id="formNivel">
+    <input type="hidden" asp-for="IdLibro" id="txtid" />
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @*<img id="imglibro" height="192" width="190" class="border border-dark" />*@
+                <img id="imglibro" height="192" width="190" class="border border-dark" src="~/documents/ImgLibros/@Model.RutaPortada" />
+            </div>
+            <div class="form-group">
+                @*<input class="form-control-file" type="file" id="filelibro" onchange="readURL(this);">*@
+                <input type="file" class="form-control-file" id="filelibro" asp-for="NombrePortada" onchange="readURL6(this);" accept=".png, .jpeg, .jpg">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="txttitulo">Titulo</label>
+                <input asp-for="Titulo" type="text" class="form-control required" id="txttitulo">
+            </div>
+            <div class="form-group">
+                <label for="cboautor">Autor</label>
+                <select asp-for="IdAutor" asp-items="ViewBag.Lista_Autores" id="cboautor" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label for="cbocategoria">Categoria</label>
+                <select asp-for="IdCategoria" asp-items="ViewBag.Lista_Categorias" id="cbocategoria" class="form-control"></select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="cboeditorial">Editorial</label>
+                <select asp-for="IdEditorial" asp-items="ViewBag.Lista_Editoriales" id="cboeditorial" class="form-control"></select>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="txtubicacion">Ubicacion</label>
+                <input asp-for="Ubicacion" type="text" class="form-control required" id="txtubicacion">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="txtejemplares">Ejemplares</label>
+                <input asp-for="Ejemplares" type="text" class="form-control required" id="txtejemplares">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="cboEstado">Estado:</label>
+                <select asp-for="Estado" asp-items="ViewBag.Lista_Estados" id="cboEstado" class="form-control"></select>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+    <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+</div>
