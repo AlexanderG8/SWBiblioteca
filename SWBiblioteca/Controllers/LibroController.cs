@@ -7,9 +7,11 @@ using SWBiblioteca.Entity;
 using SWBiblioteca.Clases;
 using Microsoft.Extensions.Hosting.Internal;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SWBiblioteca.Controllers
 {
+    [Authorize]
     public class LibroController : Controller
     {
         private readonly ApplicationDbContext _context;

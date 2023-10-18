@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SWBiblioteca.Entity;
 using SWBiblioteca.Entity.Procedure;
+using SWBiblioteca.Models;
 using System.Reflection.Emit;
 
 namespace SWBiblioteca.Data
@@ -23,6 +24,7 @@ namespace SWBiblioteca.Data
             model.Entity<AUTOR>().HasIndex(z => z.IdAutor).IsUnique();
             model.Entity<LIBRO>().HasIndex(z => z.IdLibro).IsUnique();
             model.Entity<LISTAR_LIBROS_Q01>().HasIndex(z => z.IdLibro).IsUnique();
+            model.Entity<PERSONA>().HasIndex(z => z.IdPersona).IsUnique();
 
         }
 
@@ -33,6 +35,7 @@ namespace SWBiblioteca.Data
         public DbSet<AUTOR> AUTOR { get; set; }
         public DbSet<LIBRO> LIBRO { get; set; }
         public DbSet<LISTAR_LIBROS_Q01> LISTAR_LIBROS_Q01 { get; set; }
+        public DbSet<PERSONA> PERSONA { get; set; }
 
     }
 }

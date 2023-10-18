@@ -1,0 +1,41 @@
+
+ALTER PROCEDURE LISTAR_LIBROS_Q01
+/*
+ALEXANDER GOMEZ
+SE CREO PROCEDIMIENTO PARA VISTA DE LIBROS
+
+EXEC LISTAR_LIBROS_Q01
+*/
+AS BEGIN 
+CREATE TABLE #TWREPOR
+(
+IdLibro INT,
+Titulo		VARCHAR(100),
+Autor		VARCHAR(50),
+Categoria	VARCHAR(50),
+Editorial	VARCHAR(50),
+Ubicacion	VARCHAR(50),
+Ejemplares	INT,
+Estado		BIT
+)
+INSERT INTO #TWREPOR
+SELECT 
+L.IdLibro,
+L.Titulo,
+A.Descripcion,
+C.Descripcion,
+E.Descripcion,
+L.Ubicacion,
+L.Ejemplares,
+L.Estado
+FROM LIBRO L
+INNER JOIN AUTOR A ON L.IdAutor = A.IdAutor
+INNER JOIN CATEGORIA C ON L.IdCategoria = C.IdCategoria
+INNER JOIN EDITORIAL E ON L.IdEditorial = E.IdEditorial
+
+SELECT * FROM #TWREPOR
+END
+
+
+
+

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SWBiblioteca.Data;
@@ -6,6 +7,7 @@ using SWBiblioteca.Entity;
 
 namespace SWBiblioteca.Controllers
 {
+    [Authorize]
     public class AutorController : Controller
     {
         private readonly ApplicationDbContext _context;
