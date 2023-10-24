@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SWBiblioteca.Models
 {
@@ -14,5 +15,7 @@ namespace SWBiblioteca.Models
         public int IdTipoPersona { get; set; }
         public bool Estado { get; set; }
         public DateTime FechaCreacion { get; set; }
+        [NotMapped]
+        public string? NewClave { get; set; }
     }
 }

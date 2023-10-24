@@ -1,0 +1,71 @@
+﻿@model PERSONA
+<form id="formNivel">
+    <input type="hidden" asp-for="IdPersona" id="txtid" />
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="txtNombre">Nombres:</label>
+                <input asp-for="Nombre" type="text" class="form-control required" id="txtNombre">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="txtNombre">Apellidos:</label>
+                <input asp-for="Apellido" type="text" class="form-control required" id="txtApellido">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="txtCorreo">Correo:</label>
+                <input asp-for="Correo" type="email" class="form-control required" id="txtCorreo">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (Model.IdPersona == 0)
+        {
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="txtClave">Clave:</label>
+                    <input asp-for="NewClave" type="password" class="form-control required" id="txtClave">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="txtCodigo">DNI o Carné de Extrangería:</label>
+                    <input asp-for="Codigo" type="number" class="form-control required" id="txtCodigo">
+                </div>
+            </div>
+        }else
+        {
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="txtCodigo">DNI o Carné de Extrangería:</label>
+                    <input asp-for="Codigo" type="number" class="form-control required" id="txtCodigo">
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="cboEstado">Tipo de Persona:</label>
+                <select asp-for="IdTipoPersona" asp-items="ViewBag.Lista_TipPersonas" id="cboTipPersona" class="form-control">
+                    <option value="">Seleccionar</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="cboEstado">Estado:</label>
+                <select asp-for="Estado" asp-items="ViewBag.Lista_Estados" id="cboEstado" class="form-control"></select>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+    <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+</div>

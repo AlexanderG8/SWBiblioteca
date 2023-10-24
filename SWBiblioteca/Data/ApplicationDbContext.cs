@@ -25,9 +25,10 @@ namespace SWBiblioteca.Data
             model.Entity<LIBRO>().HasIndex(z => z.IdLibro).IsUnique();
             model.Entity<LISTAR_LIBROS_Q01>().HasIndex(z => z.IdLibro).IsUnique();
             model.Entity<PERSONA>().HasIndex(z => z.IdPersona).IsUnique();
+            model.Entity<PR_PERSONA_Q01>().HasIndex(z => z.IdPersona).IsUnique();
 
         }
-
+        public DbSet<PR_PERSONA_Q01> PR_PERSONA_Q01 { get; set; }
         public DbSet<TIPO_PERSONA> TIPO_PERSONA { get; set; }
         public DbSet<CATEGORIA> CATEGORIA { get; set; }
         public DbSet<ESTADOS> ESTADOS { get; set; }

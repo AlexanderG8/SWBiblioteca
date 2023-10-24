@@ -1,0 +1,354 @@
+﻿@model IEnumerable<PR_PERSONA_Q01>
+@{
+
+}
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-primary">
+        <h6 class="m-0 font-weight-bold text-white">Lista de Usuarios</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Index">
+            <div class="row">
+                <div class="col-sm-4">
+                    <input type="date" class="form-control" name="fecInicio" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-sm-4">
+                    <input type="date" class="form-control" name="fecFinal" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-sm-4">
+                    <input type="submit" class="btn btn-info" value="Aplicar Filtro" />
+                    <a asp-action="Index" class="btn btn-dark">Limpiar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <a asp-action="Modal" class="btn btn-success btn-sm guardar-dialog-window" type="button">Crear Nuevo</a>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tabla" style="width:100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Correo</th>
+                                <th>Código</th>
+                                <th>Tipo de Persona</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Apellido)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Correo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Codigo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TipoPersona)
+                                    </td>
+                                    <td>
+                                        @if (item.Estado == "Activo")
+                                        {
+                                            <span class="badge badge-success p-2">Activo</span>
+                                        }else
+                                        {
+                                            <span class="badge badge-danger p-2">Inactivo</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="Modal" asp-route-id="@item.IdPersona" class="btn btn-primary btn-sm ml-2 guardar-dialog-window"><i class="fas fa-pen"></i></a>
+                                        <a asp-action="ModalResetPassword" asp-route-id="@item.IdPersona" class="btn btn-warning btn-sm ml-2 reset-dialog-window"><i class="fas fa-key"></i></a>
+                                        <a data-id="@item.IdPersona.ToString()" class="btn btn-danger btn-sm ml-2 eliminar-dialog-window"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="teeee">Please wait...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ResetPassword" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Cambiar Contraseña</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="teeee">Please wait...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="Delete" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <h5>¿Estas seguro de eliminar el registro seleccionado?</h5>
+                </div>
+                <div id="response" class="text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        var tabladata;
+        $(document).ready(function () {
+            tabladata = $('#tabla').DataTable({
+                responsive:true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+                }
+            });
+        });
+
+        $("body").on("click", "a.guardar-dialog-window", null, function (e) {
+            e.preventDefault();
+            var $link = $(this);
+            var url = $(this).attr('href');
+            if (url.indexOf('#') == 0) {
+                $('#FormModal').modal('show');
+            }
+            else {
+                $.get(url, function (data) {
+                    $('#FormModal .teeee').html(data);
+                    $('#FormModal').modal();
+                })
+            }
+        });
+
+        $("body").on("click", "a.reset-dialog-window", null, function (e) {
+            e.preventDefault();
+            var $link = $(this);
+            var url = $(this).attr('href');
+            if (url.indexOf('#') == 0) {
+                $('#ResetPassword').modal('show');
+            }
+            else {
+                $.get(url, function (data) {
+                    $('#ResetPassword .teeee').html(data);
+                    $('#ResetPassword').modal();
+                })
+            }
+        });
+
+        $("body").on("click", "a.eliminar-dialog-window", null, function (e) {
+            var htmlContent = '<div class="modal-footer"><button type="button" id="btnNo" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</button><a onclick=Eliminar(' + $(this).data('id') + ') class="btn btn-primary">Si</a></div>';
+            $("#response").html(htmlContent);
+            $('#Delete').modal('show');
+        });
+
+
+        function Guardar() {
+            $('.errorForm').remove();
+            let nombre = $("#txtNombre").val();
+            let apellido = $("#txtApellido").val();
+            let correo = $("#txtCorreo").val();
+            let clave = $("#txtClave").val();
+            let codigo = $("#txtCodigo").val();
+            let tipPersona = $("#cboTipPersona").val();
+            let estado = $("#cboEstado").val();
+            let idPersona = $("#txtid").val();
+
+            if (nombre.trim() == "") {
+                $("#txtNombre").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                return false;
+            }
+            if (apellido.trim() == "") {
+                $("#txtApellido").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                return false;
+            }
+            if (correo.trim() == "") {
+                $("#txtCorreo").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                return false;
+            }
+            if (idPersona == 0) {
+                if (clave.trim() == "") {
+                    $("#txtClave").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                    return false;
+                }
+            }
+            if (codigo.trim() == "") {
+                $("#txtCodigo").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                return false;
+            }
+            if (tipPersona.trim() == "") {
+                $("#cboTipPersona").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                return false;
+            }
+            if (estado.trim() == "") {
+                $("#cboEstado").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                return false;
+            }
+
+            var objPersona = new Object();
+            objPersona.IdPersona = $("#txtid").val();
+            objPersona.Nombre = $("#txtNombre").val();
+            objPersona.Apellido = $("#txtApellido").val();
+            objPersona.Correo = $("#txtCorreo").val();
+            objPersona.NewClave = $("#txtClave").val();
+            objPersona.Codigo = $("#txtCodigo").val();
+            objPersona.IdTipoPersona = $("#cboTipPersona").val();
+            objPersona.Estado = $("#cboEstado").val();
+            debugger
+            jQuery.ajax({
+                type: "POST",
+                url: '@Url.Action("Guardar", "Persona")',
+                dataType: "json",
+                data: objPersona,
+                success: function (data) {
+                    debugger
+                    if (data.valor) {
+                        $('#FormModal').modal('hide');
+                        swal({
+                            title: data.message,
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then((value) => {
+                            refrescar();
+                        });
+                    } else {
+                        swal({
+                            title: data.message,
+                            icon: "error",
+                            button: "Aceptar",
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+                },
+            });
+        }
+
+        function Eliminar(idPersona) {
+            debugger
+            jQuery.ajax({
+                type: "POST",
+                url: '@Url.Action("Eliminar", "Persona")',
+                dataType: "json",
+                data: { id: idPersona },
+                success: function (data) {
+                    debugger
+                    if (data.valor) {
+                        $('#Delete').modal('hide');
+                        swal({
+                            title: data.message,
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then((value) => {
+                            refrescar();
+                        });
+                    } else {
+                        swal({
+                            title: data.message,
+                            icon: "error",
+                            button: "Aceptar",
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+                },
+            });
+        }
+        function ResetearPassword() {
+            let idPersona = $("#txtid").val();
+            let clave = $("#txtClave").val();
+            if (clave.trim() == "") {
+                $("#txtClave").after('<span class="errorForm text-danger">Dato Requerido</span>');
+                return false;
+            }
+            debugger
+            jQuery.ajax({
+                type: "POST",
+                url: '@Url.Action("ResetPassword", "Persona")',
+                dataType: "json",
+                data: { id: idPersona, password: clave },
+                success: function (data) {
+                    debugger
+                    if (data.valor) {
+                        $('#ResetPassword').modal('hide');
+                        swal({
+                            title: data.message,
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then((value) => {
+                            refrescar();
+                        });
+                    } else {
+                        swal({
+                            title: data.message,
+                            icon: "error",
+                            button: "Aceptar",
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+                },
+            });
+        }
+    </script>
+}

@@ -22,10 +22,12 @@ namespace SWBiblioteca.Controllers
         {
             #region Cantidades
             var libros = _context.LIBRO.Where(z => z.Estado).ToList().Count();
+            var lectores = _context.PERSONA.Where(z => z.IdTipoPersona.Equals(3)).ToList().Count();
             #endregion
 
             #region ViewBags
             ViewBag.CantidadLibros = libros;
+            ViewBag.CantidadLectores = lectores;
             #endregion
 
             return View();
