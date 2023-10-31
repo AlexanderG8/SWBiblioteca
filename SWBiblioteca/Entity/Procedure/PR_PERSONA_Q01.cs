@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SWBiblioteca.Entity.Procedure
 {
@@ -12,5 +13,7 @@ namespace SWBiblioteca.Entity.Procedure
         public string? Codigo { get; set; }
         public string? TipoPersona { get; set; }
         public string? Estado { get; set; }
+        [NotMapped]
+        public string? Validacion { get; set; }
     }
 }

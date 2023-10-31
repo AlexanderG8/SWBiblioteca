@@ -26,7 +26,8 @@ namespace SWBiblioteca.Data
             model.Entity<LISTAR_LIBROS_Q01>().HasIndex(z => z.IdLibro).IsUnique();
             model.Entity<PERSONA>().HasIndex(z => z.IdPersona).IsUnique();
             model.Entity<PR_PERSONA_Q01>().HasIndex(z => z.IdPersona).IsUnique();
-
+            model.Entity<LOG_PERSONA>().HasIndex(z => z.Id_LogPersona).IsUnique();
+            model.Entity<CONSULTAR_PERFIL_Q01>().HasIndex(z => z.Codigo).IsUnique();
         }
         public DbSet<PR_PERSONA_Q01> PR_PERSONA_Q01 { get; set; }
         public DbSet<TIPO_PERSONA> TIPO_PERSONA { get; set; }
@@ -37,6 +38,7 @@ namespace SWBiblioteca.Data
         public DbSet<LIBRO> LIBRO { get; set; }
         public DbSet<LISTAR_LIBROS_Q01> LISTAR_LIBROS_Q01 { get; set; }
         public DbSet<PERSONA> PERSONA { get; set; }
-
+        public DbSet<LOG_PERSONA> LOG_PERSONA { get; set; }
+        public DbSet<CONSULTAR_PERFIL_Q01> CONSULTAR_PERFIL_Q01 { get; set; }
     }
 }

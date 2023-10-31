@@ -43,6 +43,7 @@
                                 <th>Código</th>
                                 <th>Tipo de Persona</th>
                                 <th>Estado</th>
+                                <th>Validación</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -75,9 +76,36 @@
                                         }
                                     </td>
                                     <td>
-                                        <a asp-action="Modal" asp-route-id="@item.IdPersona" class="btn btn-primary btn-sm ml-2 guardar-dialog-window"><i class="fas fa-pen"></i></a>
-                                        <a asp-action="ModalResetPassword" asp-route-id="@item.IdPersona" class="btn btn-warning btn-sm ml-2 reset-dialog-window"><i class="fas fa-key"></i></a>
-                                        <a data-id="@item.IdPersona.ToString()" class="btn btn-danger btn-sm ml-2 eliminar-dialog-window"><i class="fas fa-trash"></i></a>
+                                        @if (item.Validacion == "Aceptado")
+                                        {
+                                            <span class="badge badge-success p-2">@Html.DisplayFor(modelItem => item.Validacion)</span>
+                                        }
+                                        @if (item.Validacion == "Rechazado")
+                                        {
+                                            <span class="badge badge-danger p-2">@Html.DisplayFor(modelItem => item.Validacion)</span>
+                                        }
+                                        @if (item.Validacion == "Creado")
+                                        {
+                                            <span class="badge badge-info p-2">@Html.DisplayFor(modelItem => item.Validacion)</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.Validador > 0)
+                                        {
+                                            if (item.Validacion == "Creado")
+                                            {
+                                                <a data-id="@item.IdPersona.ToString()" class="btn btn-info btn-sm ml-2 aceptar-dialog-window">Aceptar</a>
+                                                <a data-id="@item.IdPersona.ToString()" class="btn btn-danger btn-sm ml-2 rechazar-dialog-window">Rechazar</a>
+                                            }else
+                                            {
+                                                <a asp-action="Detalle" class="btn btn-dark btn-sm ml-2 detalle-dialog-window">Detalle</a>
+                                            }
+                                        }else
+                                        {
+                                            <a asp-action="Modal" asp-route-id="@item.IdPersona" class="btn btn-primary btn-sm ml-2 guardar-dialog-window"><i class="fas fa-pen"></i></a>
+                                            <a asp-action="ModalResetPassword" asp-route-id="@item.IdPersona" class="btn btn-warning btn-sm ml-2 reset-dialog-window"><i class="fas fa-key"></i></a>
+                                            <a data-id="@item.IdPersona.ToString()" class="btn btn-danger btn-sm ml-2 eliminar-dialog-window"><i class="fas fa-trash"></i></a>
+                                        }
                                     </td>
                                 </tr>
                             }        
@@ -145,6 +173,48 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="Aceptar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <h5>¿Estas seguro de aceptar el registro seleccionado?</h5>
+                </div>
+                <div id="responseA" class="text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="Rechazar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <h5>¿Estas seguro de rechazar el registro seleccionado?</h5>
+                </div>
+                <div id="responseR" class="text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts{
     <script>
         var tabladata;
@@ -191,6 +261,18 @@
             var htmlContent = '<div class="modal-footer"><button type="button" id="btnNo" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</button><a onclick=Eliminar(' + $(this).data('id') + ') class="btn btn-primary">Si</a></div>';
             $("#response").html(htmlContent);
             $('#Delete').modal('show');
+        });
+
+        $("body").on("click", "a.aceptar-dialog-window", null, function (e) {
+            var htmlContent = '<div class="modal-footer"><button type="button" id="btnNo" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</button><a onclick=Aceptar(' + $(this).data('id') + ') class="btn btn-primary">Si</a></div>';
+            $("#responseA").html(htmlContent);
+            $('#Aceptar').modal('show');
+        });
+
+        $("body").on("click", "a.rechazar-dialog-window", null, function (e) {
+            var htmlContent = '<div class="modal-footer"><button type="button" id="btnNo" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</button><a onclick=Rechazar(' + $(this).data('id') + ') class="btn btn-primary">Si</a></div>';
+            $("#responseR").html(htmlContent);
+            $('#Rechazar').modal('show');
         });
 
 
@@ -311,6 +393,75 @@
                 },
             });
         }
+
+        function Aceptar(idPersona) {
+            debugger
+            jQuery.ajax({
+                type: "POST",
+                url: '@Url.Action("Aceptar", "Persona")',
+                dataType: "json",
+                data: { id: idPersona },
+                success: function (data) {
+                    debugger
+                    if (data.valor) {
+                        $('#Aceptar').modal('hide');
+                        swal({
+                            title: data.message,
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then((value) => {
+                            refrescar();
+                        });
+                    } else {
+                        swal({
+                            title: data.message,
+                            icon: "error",
+                            button: "Aceptar",
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+                },
+            });
+        }
+
+        function Rechazar(idPersona) {
+            debugger
+            jQuery.ajax({
+                type: "POST",
+                url: '@Url.Action("Rechazar", "Persona")',
+                dataType: "json",
+                data: { id: idPersona },
+                success: function (data) {
+                    debugger
+                    if (data.valor) {
+                        $('#Rechazar').modal('hide');
+                        swal({
+                            title: data.message,
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then((value) => {
+                            refrescar();
+                        });
+                    } else {
+                        swal({
+                            title: data.message,
+                            icon: "error",
+                            button: "Aceptar",
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+                },
+            });
+        }
+
         function ResetearPassword() {
             let idPersona = $("#txtid").val();
             let clave = $("#txtClave").val();

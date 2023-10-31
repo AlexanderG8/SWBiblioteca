@@ -9,9 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//Importamos servicios de conexión a nuestra base de datos
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConectionDB")));
+//Importamos servicios de Usuario
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-
+//Importamos servicios de envio de correo
+builder.Services.AddScoped<IEmailService, EmailService>();
+//Importamos servicios de login
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
