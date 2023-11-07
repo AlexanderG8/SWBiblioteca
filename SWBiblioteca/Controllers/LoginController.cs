@@ -6,6 +6,7 @@ using System.Security.Claims;
 using SWBiblioteca.Models;
 using SWBiblioteca.Resources;
 using SWBiblioteca.Clases;
+using System.Numerics;
 
 namespace SWBiblioteca.Controllers
 {
@@ -33,7 +34,22 @@ namespace SWBiblioteca.Controllers
             model.Estado = false;
             model.FechaCreacion = DateTime.Now;
 
+            #region Validar
+            var validacion = await _usuarioService.ValidarUserExistente(model.Correo, model.Codigo);
+            if (validacion == "Correo")
+            {
+                ViewData["Mensaje"] = "El correo ya se encuentra registrado";
+                return View();
+            }
+            if (validacion == "DNI")
+            {
+                ViewData["Mensaje"] = "El DNI o Carné ya se encuentra registrado";
+                return View();
+            }
+            #endregion
+
             PERSONA newUsuario = await _usuarioService.SaveUsuario(model);
+            #region Envio de Correo
             if (newUsuario.IdPersona > 0)
             {
                 var validador = _usuarioService.ConsultaValidador("Validador");
@@ -45,7 +61,7 @@ namespace SWBiblioteca.Controllers
                             + $"<li>DNI o Carné de Extrangeria: {newUsuario.Codigo}"
                             + $"<li>Correo: {newUsuario.Correo}"
                         + "</ul>";
-                    
+
                     var request = new EmailDTO();
                     request.For = item.Correo;
                     request.Affair = "XANDER BIBLIOTECA: VALIDAR NUEVO USUARIO";
@@ -54,6 +70,8 @@ namespace SWBiblioteca.Controllers
                 }
                 return RedirectToAction("SignIn", "Login");
             }
+            #endregion
+
             ViewData["Mensaje"] = "No se pudo registrar el usuario";
             return View();
         }
@@ -131,6 +149,39 @@ namespace SWBiblioteca.Controllers
         public async Task<IActionResult> LogOff()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("SignIn", "Login");
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string correo) 
+        {
+            var model = await _usuarioService.ValidarCorreo(correo);
+            if (model == null)
+            {
+                ViewData["Mensaje"] = "Correo no se encuentra registrado!";
+                return View();
+            }
+
+            var newClave = Util.GenerateRandomKey(8);
+            model.Clave = Utilities.EncryptKey(newClave);
+            await _usuarioService.EditUsuario(model);
+
+            var cuerpo = $"<p>Estimado {model.Nombre} {model.Apellido}, su nueva contraseña es:</p>"
+                        + "<ul>"
+                            + $"<li>Contraseña: {newClave}</li>"
+                        + "</ul>";
+
+            var request = new EmailDTO();
+            request.For = model.Correo;
+            request.Affair = "XANDER BIBLIOTECA: VALIDAR NUEVO USUARIO";
+            request.Content = Util.EmailBody(cuerpo);
+            _emailService.SendEmail(request);
 
             return RedirectToAction("SignIn", "Login");
         }

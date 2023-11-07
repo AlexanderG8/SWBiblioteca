@@ -25,11 +25,14 @@
         </form>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-sm-12">
-                <a asp-action="Modal" class="btn btn-success btn-sm guardar-dialog-window" type="button">Crear Nuevo</a>
+        @if (ViewBag.Validador == 0)
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <a asp-action="Modal" class="btn btn-success btn-sm guardar-dialog-window" type="button">Crear Nuevo</a>
+                </div>
             </div>
-        </div>
+        }
         <hr />
         <div class="row">
             <div class="col-sm-12">

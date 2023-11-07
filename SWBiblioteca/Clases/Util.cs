@@ -17,6 +17,20 @@
             return lista;
         }
 
+        internal static string GenerateRandomKey(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // Caracteres permitidos para la clave
+            var random = new Random();
+            var key = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                key[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(key);
+        }
+
         internal static string EmailBody(string content)
         {
             var body = "<!DOCTYPE html>"

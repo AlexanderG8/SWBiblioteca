@@ -67,12 +67,22 @@
                                                id="exampleRepeatPassword" placeholder="Contraseña" asp-for="Clave" required>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    @if (ViewData["Mensaje"] != null)
+                                    {
+                                        <div class="alert alert-danger" role="alert">
+
+                                            @ViewData["Mensaje"]
+
+                                        </div>
+                                    }
+                                </div>
                                 <input type="button" class="btn btn-primary btn-user btn-block" value="Registrar cuenta" onclick="MostrarInfor()"/>
                             </form>
                             <hr>
                             <div class="row">
                                 <div class="col-md-6 text-center">
-                                    <a class="small" href="forgot-password.html">¿Ha olvidado su contraseña?</a>
+                                    <a class="small" href="@Url.Action("ForgotPassword","Login")">¿Ha olvidado su contraseña?</a>
                                 </div>
                                 <div class="col-md-6 text-center">
                                     <a class="small" href="@Url.Action("SignIn","Login")">¿Ya tienes una cuenta? Login!</a>
